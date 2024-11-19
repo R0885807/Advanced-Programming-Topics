@@ -1,0 +1,74 @@
+services:
+ mongo-cars:
+  image: mongo:latest
+  ports:
+    - 27017:27017
+  volumes:
+    - mongodb_car_data:/data/db
+    
+ mysql-garage:
+  image: mysql:latest
+  ports:
+    - 3308:3306
+  volumes:
+    - mysql_garage_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ mysql-mechanic:
+  image: mysql:latest
+  ports:
+    - 3307:3306
+  volumes:
+    - mysql_mechanic_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
+ car-service:
+  depends_on:
+    - mongo-cars
+  image: robbie013123/car-service
+  ports:
+    - 8080:8080
+  links:
+    - mongo-products
+  environment:
+   MONGODB_PORT: 27017
+   MONGODB_HOST: mongo-cars
+   
+ mechanic-service:
+  depends_on:
+    - mysql-mechanic
+  image: robbie013123/mechanic-service
+  ports:
+    - 8082:8082
+  links:
+    - mysql-mechanic
+  environment:
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-mechanic
+   MYSQL_DB_PORT: 3307
+
+ garage-service:
+  depends_on:
+    - car-service
+    - mechanic-service
+  image: robbie013123/garage-service
+  ports:
+    - 8081:8081
+  links:
+    - car-service
+    - mechanic-service
+  environment:
+   CAR_SERVICE_BASEURL: car-service:8080
+   MECHANIC_INFO_SERVICE_BASEURL: mechanic-service:8082
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-garage
+   MYSQL_DB_PORT: 3308
+
+volumes:
+ mongodb_car_data:
+ mysql_mechanic_data:
+ mysql_garage_data:
