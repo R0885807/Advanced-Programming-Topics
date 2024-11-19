@@ -48,7 +48,7 @@ services:
    MYSQL_DB_USERNAME: root
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-mechanic
-   MYSQL_DB_PORT: 3307
+   MYSQL_DB_PORT: 3306
 
  garage-service:
   depends_on:
@@ -66,7 +66,7 @@ services:
    MYSQL_DB_USERNAME: root
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-garage
-   MYSQL_DB_PORT: 3308
+   MYSQL_DB_PORT: 3306
 
 volumes:
  mongodb_car_data:
