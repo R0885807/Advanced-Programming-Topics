@@ -12,7 +12,7 @@ spring:
   cloud:
     gateway:
       routes:
-# Car service
+        # Car service
         - id: car-service
           uri: http://${CAR_SERVICE_BASEURL:localhost:8080}
           predicates:
@@ -22,7 +22,7 @@ spring:
             - SetPath=/api/car
 
         - id: car-service-all
-          uri: http://${car-service:8080}
+          uri: http://${CAR_SERVICE_BASEURL:localhost:8080}
           predicates:
             - Path=/cars/all
             - Method=GET
@@ -36,7 +36,7 @@ spring:
             - Method=GET
           filters:
             - SetPath=/api/car/{id}
-#Mechanic Service
+        #Mechanic Service
         - id: mechanic-service
           uri: http://${MECHANIC_SERVICE_BASEURL:localhost:8082}
           predicates:
@@ -52,7 +52,7 @@ spring:
             - Method=GET
           filters:
             - SetPath=/api/mechanic/all
-#Garage Service
+        #Garage Service
         - id: garage-service-repair
           uri: http://${GARAGE_SERVICE_BASEURL:localhost:8081}
           predicates:
