@@ -68,6 +68,23 @@ services:
    MYSQL_DB_HOST: mysql-garage
    MYSQL_DB_PORT: 3306
 
+ api-gateway:
+   depends_on:
+     - car-service
+     - mechanic-service
+     - garage-service
+   image: robbie013123/api-gateway
+   ports:
+     - 8083:8083
+   links:
+     - car-service
+     - mechanic-service
+     - garage-service
+   environment:
+     CAR_SERVICE_BASEURL: car-service:8080
+     MECHANIC_SERVICE_BASEURL: mechanic-service:8082
+     GARAGE_SERVICE_BASEURL: garage-service:8081
+
 volumes:
  mongodb_car_data:
  mysql_mechanic_data:
