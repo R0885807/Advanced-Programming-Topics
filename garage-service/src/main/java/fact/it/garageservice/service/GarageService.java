@@ -7,6 +7,9 @@ import fact.it.garageservice.dto.RepairResponse;
 import fact.it.garageservice.model.Repair;
 import fact.it.garageservice.repository.RepairRepository;
 import lombok.RequiredArgsConstructor;
+
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,6 +23,11 @@ import java.util.List;
 @Transactional
 
 public class GarageService {
+
+    @Value("${mechanicservice.baseurl}")
+    private String mechanicServiceBaseUrl;
+    @Value("${carservice.baseurl}")
+    private String carServiceBaseUrl;
     private final WebClient webClient;
     private final RepairRepository repairRepository;
     public boolean handleRepair(RepairRequest repairRequest) {
@@ -78,20 +86,20 @@ public class GarageService {
 
     private Long getAvailableMechanicId(String brandSpeciality) {
         MechanicResponse mechanicResponse = webClient.get()
-                .uri("http://localhost:8082/api/mechanic/brandSpeciality/" + brandSpeciality)
+                .uri("http://" + mechanicServiceBaseUrl + "/api/mechanic/brandSpeciality/" + brandSpeciality)
                 .retrieve().bodyToMono(MechanicResponse.class).block();
         return Long.parseLong(mechanicResponse.getId());
     }
     private String getBrand(String carId) {
         CarResponse carResponse = webClient.get()
-                .uri("http://localhost:8080/api/car/" + carId)
+                .uri("http://" + carServiceBaseUrl + "/api/car/" + carId)
                 .retrieve().bodyToMono(CarResponse.class).block();
         return carResponse.getBrand();
     }
 
     private void changeAvailableMechanic(Long mechanicId) {
         webClient.put()
-                .uri("http://localhost:8082/api/mechanic/changeAvailability/" + mechanicId)
+                .uri("http://" + mechanicServiceBaseUrl + "/api/mechanic/changeAvailability/" + mechanicId)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
@@ -99,7 +107,7 @@ public class GarageService {
 
     private void deleteCar(String id) {
         webClient.delete()
-                .uri("http://localhost:8080/api/car/" + id)
+                .uri("http://" + carServiceBaseUrl + "/api/car/" + id)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

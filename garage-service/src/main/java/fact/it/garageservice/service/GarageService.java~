@@ -7,6 +7,9 @@ import fact.it.garageservice.dto.RepairResponse;
 import fact.it.garageservice.model.Repair;
 import fact.it.garageservice.repository.RepairRepository;
 import lombok.RequiredArgsConstructor;
+
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,6 +23,9 @@ import java.util.List;
 @Transactional
 
 public class GarageService {
+
+    @Value("${mechanicservice.baseurl}")
+    private String mechanicServiceBaseUrl;
     private final WebClient webClient;
     private final RepairRepository repairRepository;
     public boolean handleRepair(RepairRequest repairRequest) {
@@ -28,6 +34,7 @@ public class GarageService {
             repair.setCarId(repairRequest.getCarId());
             repair.setStartDate(LocalDateTime.now());
             changeAvailableMechanic(repair.getMechanicId());
+            repairRepository.save(repair);
             return true;
         }
 
@@ -41,6 +48,7 @@ public class GarageService {
         try{Repair repair = repairRepository.findById(id).get();
             repair.setEndDate(LocalDateTime.now());
             changeAvailableMechanic(repair.getMechanicId());
+            repairRepository.save(repair);
             return true;
         }
         catch (Exception e) {
@@ -61,6 +69,7 @@ public class GarageService {
         try{Repair repair = repairRepository.findById(id).get();
             repair.setPaid(true);
             deleteCar(repair.getCarId());
+            repairRepository.save(repair);
             return true;
         }
         catch (Exception e) {
@@ -75,7 +84,7 @@ public class GarageService {
 
     private Long getAvailableMechanicId(String brandSpeciality) {
         MechanicResponse mechanicResponse = webClient.get()
-                .uri("http://localhost:8082/api/mechanic/brandSpeciality/" + brandSpeciality)
+                .uri("http://mechanicServiceBaseUrl/api/mechanic/brandSpeciality/" + brandSpeciality)
                 .retrieve().bodyToMono(MechanicResponse.class).block();
         return Long.parseLong(mechanicResponse.getId());
     }
@@ -88,7 +97,7 @@ public class GarageService {
 
     private void changeAvailableMechanic(Long mechanicId) {
         webClient.put()
-                .uri("http://localhost:8082/api/mechanic/changeAvailability/" + mechanicId)
+                .uri("http://mechanicServiceBaseUrl/api/mechanic/changeAvailability/" + mechanicId)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
