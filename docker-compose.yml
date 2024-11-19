@@ -31,7 +31,7 @@ services:
   ports:
     - 8080:8080
   links:
-    - mongo-car
+    - mongo-cars
   environment:
    MONGODB_PORT: 27017
    MONGODB_HOST: mongo-cars
