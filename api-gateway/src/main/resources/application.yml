@@ -22,7 +22,7 @@ spring:
             - SetPath=/api/car
 
         - id: car-service-all
-          uri: http://${CAR_SERVICE_BASEURL:localhost:8080}
+          uri: http://${car-service:8080}
           predicates:
             - Path=/cars/all
             - Method=GET
