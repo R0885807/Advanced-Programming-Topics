@@ -32,8 +32,8 @@ public class CarServiceUnitTests {
 	public void testCreateCar() {
 		// Arrange
 		CarRequest carRequest = new CarRequest();
-		carRequest.setBrand("BMW");
-		carRequest.setModel("X5");
+		carRequest.setBrand("Audi");
+		carRequest.setModel("A4");
 		carRequest.setYear(2022);
 		carRequest.setMileage(10000);
 
@@ -47,8 +47,8 @@ public class CarServiceUnitTests {
 	@Test public void testGetAllCars() {
 		//Arrange
 		CarRequest carRequest = new CarRequest();
-		carRequest.setBrand("BMW");
-		carRequest.setModel("X5");
+		carRequest.setBrand("Audi");
+		carRequest.setModel("A4");
 		carRequest.setYear(2022);
 		carRequest.setMileage(10000);
 
@@ -57,8 +57,8 @@ public class CarServiceUnitTests {
 		List<CarResponse> cars = carService.getAllCars();
 		//Assert
 		assertEquals(1, cars.size());
-		assertEquals("BMW", cars.get(0).getBrand());
-		assertEquals("X5", cars.get(0).getModel());
+		assertEquals("Audi", cars.get(0).getBrand());
+		assertEquals("A4", cars.get(0).getModel());
 		assertEquals(2022, cars.get(0).getYear());
 		assertEquals(10000, cars.get(0).getMileage());
 
