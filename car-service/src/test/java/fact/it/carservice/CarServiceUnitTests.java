@@ -2,6 +2,7 @@ package fact.it.carservice;
 
 import fact.it.carservice.dto.CarRequest;
 import fact.it.carservice.dto.CarResponse;
+import fact.it.carservice.model.Brand;
 import fact.it.carservice.model.Car;
 import fact.it.carservice.repository.CarRepository;
 import fact.it.carservice.service.CarService;
@@ -12,12 +13,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CarServiceUnitTests {
@@ -46,13 +47,13 @@ public class CarServiceUnitTests {
 
 	@Test public void testGetAllCars() {
 		//Arrange
-		CarRequest carRequest = new CarRequest();
-		carRequest.setBrand("Audi");
-		carRequest.setModel("A4");
-		carRequest.setYear(2022);
-		carRequest.setMileage(10000);
+		Car car = new Car();
+		car.setBrand(Brand.Audi);
+		car.setModel("A4");
+		car.setYear(2022);
+		car.setMileage(10000);
 
-		carService.createCar(carRequest);
+		when(carRepository.findAll()).thenReturn(Arrays.asList(car));
 		//Act
 		List<CarResponse> cars = carService.getAllCars();
 		//Assert
@@ -68,14 +69,17 @@ public class CarServiceUnitTests {
 	@Test
 	public void testDeleteCar() {
 		//Arrange
-		CarRequest carRequest = new CarRequest();
-		carRequest.setBrand("Audi");
-		carRequest.setModel("A4");
-		carRequest.setYear(2022);
-		carRequest.setMileage(10000);
-		carService.createCar(carRequest);
+		Car car = new Car();
+		car.setBrand(Brand.Audi);
+		car.setModel("A4");
+		car.setYear(2022);
+		car.setMileage(10000);
+
+		when(carRepository.findAll()).thenReturn(Arrays.asList(car));
+
+
 		List<CarResponse> cars = carService.getAllCars();
-		CarResponse car = cars.get(0);
+		CarResponse carResponse = cars.get(0);
 		//Act
 		carService.deleteCar(car.getId());
 		//Assert
