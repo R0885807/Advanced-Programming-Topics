@@ -45,7 +45,8 @@ public class CarServiceUnitTests {
 		verify(carRepository, times(1)).save(any(Car.class));
 	}
 
-	@Test public void testGetAllCars() {
+	@Test
+	public void testGetAllCars() {
 		//Arrange
 		Car car = new Car();
 		car.setBrand(Brand.Audi);
@@ -85,5 +86,45 @@ public class CarServiceUnitTests {
 		//Assert
 		verify(carRepository, times(1)).deleteById(car.getId());
 
+	}
+
+	@Test
+	public void testFindCarsByBrand() {
+		//Arrange
+		Car car = new Car();
+		car.setBrand(Brand.Audi);
+		car.setModel("A4");
+		car.setYear(2022);
+		car.setMileage(10000);
+		when(carRepository.findByBrand(Brand.Audi)).thenReturn(Arrays.asList(car));
+
+		//Act
+		List<CarResponse> cars = carService.findCarsByBrand("Audi");
+		//Assert
+		assertEquals(1, cars.size());
+		assertEquals("Audi", cars.get(0).getBrand());
+		assertEquals("A4", cars.get(0).getModel());
+		assertEquals(2022, cars.get(0).getYear());
+		assertEquals(10000, cars.get(0).getMileage());
+
+	}
+
+	@Test
+	public void testFindCarById() {
+		//Arrange
+		Car car = new Car();
+		car.setBrand(Brand.Audi);
+		car.setModel("A4");
+		car.setYear(2022);
+		car.setMileage(10000);
+		when(carRepository.findById(car.getId())).thenReturn(java.util.Optional.of(car));
+
+		//Act
+		CarResponse carResponse = carService.findCarById(car.getId());
+		//Assert
+		assertEquals("Audi", carResponse.getBrand());
+		assertEquals("A4", carResponse.getModel());
+		assertEquals(2022, carResponse.getYear());
+		assertEquals(10000, carResponse.getMileage());
 	}
 }
