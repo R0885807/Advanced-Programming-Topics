@@ -69,8 +69,8 @@ public class CarServiceUnitTests {
 	public void testDeleteCar() {
 		//Arrange
 		CarRequest carRequest = new CarRequest();
-		carRequest.setBrand("BMW");
-		carRequest.setModel("X5");
+		carRequest.setBrand("Audi");
+		carRequest.setModel("A4");
 		carRequest.setYear(2022);
 		carRequest.setMileage(10000);
 		carService.createCar(carRequest);
