@@ -1,0 +1,44 @@
+package fact.it.carservice;
+
+import fact.it.carservice.dto.CarRequest;
+import fact.it.carservice.model.Car;
+import fact.it.carservice.repository.CarRepository;
+import fact.it.carservice.service.CarService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith(MockitoExtension.class)
+public class CarServiceUnitTests {
+
+	@InjectMocks
+	private CarService carService;
+
+	@Mock
+	private CarRepository carRepository;
+
+	@Test
+	public void testCreateCar() {
+		// Arrange
+		CarRequest carRequest = new CarRequest();
+		carRequest.setBrand("BMW");
+		carRequest.setModel("X5");
+		carRequest.setYear(2022);
+		carRequest.setMileage(10000);
+
+		//Act
+		carService.createCar(carRequest);
+
+		//Assert
+		verify(carRepository, times(1)).save(any(Car.class));
+	}
+
+	
+}

@@ -15,8 +15,8 @@ spring:
       client:
         registration:
           google:
-            client-id: "245945372190-3ookl0tlna6ubrqnjt2ljgph1k9fooml.apps.googleusercontent.com"
-            client-secret: "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"
+            client-id: ${GOOGLE_CLIENTID}
+            client-secret: ${GOOGLE_CLIENTSECRET}
             scope: openid,profile,email
       resourceserver:
         jwt:
@@ -36,7 +36,7 @@ spring:
 
         - id: car-service-all
           uri: http://${CAR_SERVICE_BASEURL:localhost:8080}
-          predicates:
+          predicates: 
             - Path=/cars/all
             - Method=GET
           filters:
