@@ -1,0 +1,307 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-car-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-garage-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-mechanic-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-cars
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-cars
+  template:
+    metadata:
+      labels:
+        app: mongo-cars
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:latest
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-data
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-car-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-cars
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: mongo-cars
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-garage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-garage
+  template:
+    metadata:
+      labels:
+        app: mysql-garage
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-garage-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-garage
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-garage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-mechanic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-mechanic
+  template:
+    metadata:
+      labels:
+        app: mysql-mechanic
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: abc123
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-data
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-mechanic-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-mechanic
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-mechanic
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: car-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: car-service
+  template:
+    metadata:
+      labels:
+        app: car-service
+    spec:
+      containers:
+        - name: car-service
+          image: robbie013123/car-service
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_HOST
+              value: mongo-cars
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: car-service
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: car-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mechanic-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mechanic-service
+  template:
+    metadata:
+      labels:
+        app: mechanic-service
+    spec:
+      containers:
+        - name: mechanic-service
+          image: robbie013123/mechanic-service
+          ports:
+            - containerPort: 8082
+          env:
+            - name: MYSQL_DB_USERNAME
+              value: root
+            - name: MYSQL_DB_PASSWORD
+              value: abc123
+            - name: MYSQL_DB_HOST
+              value: mysql-mechanic
+            - name: MYSQL_DB_PORT
+              value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mechanic-service
+spec:
+  ports:
+    - port: 8082
+  selector:
+    app: mechanic-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: garage-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: garage-service
+  template:
+    metadata:
+      labels:
+        app: garage-service
+    spec:
+      containers:
+        - name: garage-service
+          image: robbie013123/garage-service
+          ports:
+            - containerPort: 8081
+          env:
+            - name: CAR_SERVICE_BASEURL
+              value: car-service:8080
+            - name: MECHANIC_INFO_SERVICE_BASEURL
+              value: mechanic-service:8082
+            - name: MYSQL_DB_USERNAME
+              value: root
+            - name: MYSQL_DB_PASSWORD
+              value: abc123
+            - name: MYSQL_DB_HOST
+              value: mysql-garage
+            - name: MYSQL_DB_PORT
+              value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: garage-service
+spec:
+  ports:
+    - port: 8081
+  selector:
+    app: garage-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: robbie013123/api-gateway
+          ports:
+            - containerPort: 8083
+          env:
+            - name: CAR_SERVICE_BASEURL
+              value: car-service:8080
+            - name: MECHANIC_SERVICE_BASEURL
+              value: mechanic-service:8082
+            - name: GARAGE_SERVICE_BASEURL
+              value: garage-service:8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  type: LoadBalancer
+
+  ports:
+    - port: 8083
+      targetPort: 8083
+
+  selector:
+    app: api-gateway

@@ -85,6 +85,18 @@ services:
      MECHANIC_SERVICE_BASEURL: mechanic-service:8082
      GARAGE_SERVICE_BASEURL: garage-service:8081
 
+ garage-app:
+    image: <angular app image>
+    expose:
+      - 4200
+    ports:
+      - 4200:4200
+    restart: on-failure
+    volumes:
+      - <path to angular app>:/app
+    working_dir: /app
+    command: "npm install && npm install -g @angular/cli@8.1.2 && ng serve --open --host 0.0.0.0 --port 4200 --disable-host-check"
+
 volumes:
  mongodb_car_data:
  mysql_mechanic_data:
