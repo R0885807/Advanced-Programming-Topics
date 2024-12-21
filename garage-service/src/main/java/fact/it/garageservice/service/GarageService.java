@@ -84,7 +84,7 @@ public class GarageService {
     {List<Repair> repairs = repairRepository.findAll();
         return repairs.stream().map(this::mapToRepairResponse).toList();}
 
-    private Long getAvailableMechanicId(String brandSpeciality) {
+    public Long getAvailableMechanicId(String brandSpeciality) {
         MechanicResponse mechanicResponse = webClient.get()
                 .uri("http://" + mechanicServiceBaseUrl + "/api/mechanic/brandSpeciality/" + brandSpeciality)
                 .retrieve().bodyToMono(MechanicResponse.class).block();
@@ -97,7 +97,7 @@ public class GarageService {
         return carResponse.getBrand();
     }
 
-    private void changeAvailableMechanic(Long mechanicId) {
+    public void changeAvailableMechanic(Long mechanicId) {
         webClient.put()
                 .uri("http://" + mechanicServiceBaseUrl + "/api/mechanic/changeAvailability/" + mechanicId)
                 .retrieve()
