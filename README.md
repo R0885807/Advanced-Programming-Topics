@@ -58,8 +58,12 @@ met een **GET(/garages/bill/{id})**, en dan wordt de prijs berekend, 25 euro/uur
 ![GET /mechanics/all](/images/AllMechanics2.png)
 
 3. **PUT /garages/repaired/{id} (AUTH)** De herstelling wordt stop gezet
-![PUT /garages/repaired/{id}](/images/RepairDone.png)
+![PUT /garages/repaired/{id}](/images/PutRepaired.png)
+**GET /garages/all (AUTH)** De enddate is gezet, maar nog niet betaald
+![GET /garages/all](/images/AllRepairs.png)
 
+4. **GET /garages/bill/{id} (AUTH)** De prijs wordt opgevraagd
+![GET /garages/bill/{id}](/images/PutRepaired.png)
 
 **GET /cars/all (AUTH)**
 ![GET /cars/all](/images/AllCars.png)

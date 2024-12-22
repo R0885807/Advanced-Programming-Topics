@@ -126,7 +126,7 @@ class GarageServiceUnitTests {
         when(repairRepository.findById(repairId)).thenReturn(Optional.of(repair));
 
         // Act
-        Long bill = garageService.getBill(repairId);
+        double bill = garageService.getBill(repairId);
 
         // Assert
         assertEquals(100L, bill, "Bill should be calculated as 4 hours * $25/hour");

@@ -113,7 +113,7 @@ class GarageServiceUnitTests {
         verify(webClient, times(1)).put();
     }
 
-    
+
     @Test
     public void testGetBill() {
         // Arrange
