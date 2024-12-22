@@ -8,10 +8,10 @@ Het is een applicatie voor een autogarage (Porsche, Mercedes en audi). Hiermee k
 ## Technische aspecten
 - **3 API services**, met een **api gateway**.
 - 2 x **MySQL** & 1 x **MongoDB** databanken
-- Deployment via kubernetes **Manifest.yaml** (**docker-compose** ook aanwezig)
 - **CI/CD pipeline** met **github actions**.
 - **Authentication** op api gateway via **GCP OAuth2**, op alle endpoints (enkel medenwerkers van de autogarage mogen dingen uitlezen en aanpassen)
 - **Unit testen** op de Service klassen van de 3 services
+- **Extra 2.2**: Deployment via kubernetes **Manifest.yaml** (**docker-compose** ook aanwezig)
 
 ## Endpoints (enkel api gateway niet intern)
  - GET /cars/all (AUTH)  -> Get all cars
