@@ -34,7 +34,7 @@ Het is een applicatie voor een autogarage (Porsche, Mercedes en audi). Hiermee k
 3. Wanneer de monteur **klaar is met de herstelling**, kan er een **PUT(/garages/repaired/{id})** gedaan worden om de **herstelling stop** te zetten.
 4. De werknemer kan dan de **prijs opvragen** aan de garage-service
 met een **GET(/garages/bill/{id})**, en dan wordt de prijs berekend, 25 euro/uur. En kan de factuur opgesteld worden.
-5. Als de klant heeft **betaald**, kan de herstelling verwijderd afgerond worden met een **PUT(/garages/pay/{id})**.
+5. Als de klant heeft **betaald**, kan de herstelling afgerond worden met een **PUT(/garages/pay/{id})**.
 
 ### Extra
 - Alle auto's kunnen opgevraagd worden **(GET /cars/all)**
@@ -52,27 +52,28 @@ met een **GET(/garages/bill/{id})**, en dan wordt de prijs berekend, 25 euro/uur
 
 2. **POST /garages/repair (AUTH)** Er wordt een herstelling geregistreerd voor de porsche
 ![POST /garages/repair](/images/PostRepair.png)
-**GET /garages/all (AUTH)** We kunnen de herstelling bekijken (carId = de porsche, mechanicId = van een porsche monteur zie volgende screenshot, startdate maar geen enddate, herstelling is nog niet klaar en niet betaald)
+**GET /garages/all (AUTH)** We kunnen de herstelling bekijken (carId = de porsche, mechanicId = van een porsche monteur zie volgende screenshot, startdate maar geen enddate, herstelling is nog niet klaar en niet betaalt)
 ![GET /garages/all](/images/AllRepairs.png)
 **GET /mechanics/all (AUTH)** Hier kan je alle monteurs zien, 1 is een porsche-monteur en niet meer available.
-![GET /mechanics/all](/images/AllMechanics2.png)
+![GET /mechanics/all](/images/AllMechanics.png)
 
-3. **PUT /garages/repaired/{id} (AUTH)** De herstelling wordt stop gezet
+3. **PUT /garages/repaired/{id} (AUTH)** Na even herstellen wordt de herstelling wordt stop gezet
 ![PUT /garages/repaired/{id}](/images/PutRepaired.png)
-**GET /garages/all (AUTH)** De enddate is gezet, maar nog niet betaald
-![GET /garages/all](/images/AllRepairs.png)
+**GET /garages/all (AUTH)** De enddate is gezet, maar nog niet betaalt
+![GET /garages/all](/images/AllRepaired.png)
 
-4. **GET /garages/bill/{id} (AUTH)** De prijs wordt opgevraagd
-![GET /garages/bill/{id}](/images/PutRepaired.png)
+4. **GET /garages/bill/{id} (AUTH)** De prijs wordt opgevraagd, de herstelling heeft ongeveer 14 minuten (0,23u) geduurd, dit komt uit op 5.83 euro aan 25 euro/u.
+![GET /garages/bill/{id}](/images/GetBill.png)
 
-**GET /cars/all (AUTH)**
-![GET /cars/all](/images/AllCars.png)
+5. **PUT /garages/pay/{id} (AUTH)** Als de klant betaald heeft, kan het afgerond worden.
+![PUT /garages/pay/{id} ](/images/PayRepair.png)
 
 
-
+### Overige endpoints
 
 **POST /mechanics (AUTH)**
 ![POST /mechanics](/images/PostMechanic.png)
 
-
+**GET /cars/all (AUTH)**
+![GET /cars/all](/images/AllCars.png)
 
