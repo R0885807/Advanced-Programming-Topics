@@ -60,10 +60,10 @@ public class GarageService {
 
     }
 
-    public Long getBill(Long id) {
+    public double getBill(Long id) {
         Repair repair = repairRepository.findById(id).get();
             int pricePerHour = 25;
-            Long workedHours = java.time.Duration.between(repair.getStartDate(), repair.getEndDate()).toHours();
+            double workedHours = (double) java.time.Duration.between(repair.getStartDate(), repair.getEndDate()).toHours();
             return workedHours * pricePerHour;
     }
 

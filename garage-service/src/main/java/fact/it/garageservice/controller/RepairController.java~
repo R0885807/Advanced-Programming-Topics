@@ -35,7 +35,7 @@ public class RepairController {
         return garageService.getBill(id);
     }
 
-    @DeleteMapping("/pay/{id}")
+    @PutMapping("/pay/{id}")
     @ResponseStatus(HttpStatus.OK)
     public String payBill(@PathVariable Long id) {
         boolean result = garageService.payBill(id);

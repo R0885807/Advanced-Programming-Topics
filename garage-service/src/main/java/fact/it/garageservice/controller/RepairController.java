@@ -31,7 +31,7 @@ public class RepairController {
 
     @GetMapping("/bill/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Long getBill(@PathVariable Long id) {
+    public double getBill(@PathVariable Long id) {
         return garageService.getBill(id);
     }
 
