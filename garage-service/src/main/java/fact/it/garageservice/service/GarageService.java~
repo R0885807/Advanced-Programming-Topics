@@ -63,7 +63,7 @@ public class GarageService {
     public double getBill(Long id) {
         Repair repair = repairRepository.findById(id).get();
             double pricePerHour = 25;
-            double workedHours = java.time.Duration.between(repair.getStartDate(), repair.getEndDate()).toMinutes() / 60.0;
+            double workedHours = java.time.Duration.between(repair.getStartDate(), repair.getEndDate()).toHoursPart();
             return workedHours * pricePerHour;
     }
 
