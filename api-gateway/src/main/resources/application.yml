@@ -56,7 +56,7 @@ spring:
             - Path=/mechanics
             - Method=POST
           filters:
-            - SetPath=/api/mechanics
+            - SetPath=/api/mechanic
 
         - id: mechanic-service-all
           uri: http://${MECHANIC_SERVICE_BASEURL:localhost:8082}
